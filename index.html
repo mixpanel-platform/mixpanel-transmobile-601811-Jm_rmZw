@@ -142,7 +142,7 @@
 
             var runQueryLists = function () {
                 var currentDate = new Date().valueOf();
-                var yesterdayDate = currentDate - (24*60*60);
+                var yesterdayDate = currentDate - (24*60*60*1000);
                 yesterdayDate = Math.floor(yesterdayDate/1000);
                 console.log(currentDate);
                 console.log(yesterdayDate);
