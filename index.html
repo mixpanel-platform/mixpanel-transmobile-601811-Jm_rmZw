@@ -118,6 +118,7 @@
                 MP.api.segment('DailyReport', 'TransMobile', params).done(function (results) {
                     var data = results.values();
                     var orderedKeys = Object.keys(data).sort().reverse();
+                    var finalData = {};
                     for (i in orderedKeys) {
 		                  var newKey = [orderedKeys[i]];
 		                  var totalSum = 0
