@@ -150,11 +150,8 @@
                       console.log("this is my people object");
                       console.log(results);
                     $("#transMobileInfo").html("");
-
                     _.each(results.values().results, function (resultobject) {
-
-
-                      
+                      var firstSeen = moment(resultobject.$properties['FirstSeen'], "YYYY-MM-DDTHH:mm:ss");
                             $('<span><strong>' + resultobject.$properties['$name'] + ' (' +
                             resultobject.$properties['ControlRoom'] + '): </strong> First seen ' +
                             firstSeen.fromNow() + '</span><br>').css({
