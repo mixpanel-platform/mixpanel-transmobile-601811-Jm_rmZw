@@ -116,12 +116,12 @@
                 };
 
                 MP.api.segment('DailyReport', 'TransMobile', params).done(function (results) {
-                     var data = results.values();
-                    var orderedKeys = Object.keys(data).sort();
+                    var data = results.values();
+                    var orderedKeys = Object.keys(data).sort().reverse();
                     for (i in orderedKeys) {
 		                  data[orderedKeys[i]]
 	                   }
-                    transMobilePie.MPChart('setData', results);
+                    transMobilePie.MPChart('setData', data);
                 });
 
                 MP.api.segment('DailyReport', 'RasIpClient', params).done(function (results) {
