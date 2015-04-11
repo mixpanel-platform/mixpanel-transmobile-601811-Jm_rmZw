@@ -119,11 +119,16 @@
                     var data = results.values();
                     var orderedKeys = Object.keys(data).sort().reverse();
                     for (i in orderedKeys) {
-		                  data[orderedKeys[i]]
+		                  var newKey = [orderedKeys[i]];
+		                  var totalSum = 0
+		                  for (date in data[newKey]) {
+		                    totalSum += data[newKey][date]
+		                  }
+	                    finalData[newKey] = totalSum
 	                   }
 	                   console.log("this is our data");
-	                   console.log(data);
-                    transMobilePie.MPChart('setData', data);
+	                   console.log(finalData);
+                    transMobilePie.MPChart('setData', finalData);
                 });
 
                 MP.api.segment('DailyReport', 'RasIpClient', params).done(function (results) {
