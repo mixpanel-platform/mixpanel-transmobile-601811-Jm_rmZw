@@ -1,15 +1,184 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
-  </head>
-  <body class="mixpanel-platform-body">
-    <h1>Hello, World!</h1>
+    <title>Locus SupportWeb</title>
+</head>
+
+<body class="mixpanel-platform-body">
+    <div class="mixpanel-platform-section">
+        <div style="float: left;"><font size="5"><b>Locus SupportWeb</b></font></div>
+        <div id="dateSelect" style="float: right;"></div>
+        <div style="clear: both;"></div>
+    </div>
+    <div class="mixpanel-platform-section">
+        <div style="float: left;"><font size="5"><b>TransMobile</b></font></div>
+        <div style="clear: both;"></div>
+        <div style="width: 100%">
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 300px; vertical-align: top"><div id="transMobilePie" style="width: 300px; height: 250px"></div></td>
+                    <td style="width: 225px; vertical-align: top">
+                        <table style="vertical-align: top">
+                            <tr><td><div id="rasIpClientPie" style="width: 225px; height: 125px"></div></td></tr>
+                            <tr><td><div id="navigationPie" style="width: 225px; height: 125px"></div></td></tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align: top"><div id="transMobileInfo" style="float: left"></div></td>
+                </tr>
+            </table>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
     <script>
-      // Run queries and display results here
+        
+        MP.api.ready(function () {
+            var dateSelect = $('#dateSelect').MPDatepicker();
+
+            var piePlotOptions = {
+                pie: {
+                    dataLabels: {
+                        enabled: false,
+                        distance: 5
+                    },
+                    showInLegend: true
+                }
+            };
+            var pieLegend = {
+                align: 'right',
+                borderRadius: 0,
+                borderWidth: 0,
+                enabled: true,
+                floating: false,
+                itemMarginBottom: 1,
+                itemMarginTop: 1,
+                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
+                layout: 'vertical',
+                margin: 2,
+                padding: 2,
+                symbolHeight: 8,
+                symbolPadding: 5,
+                symbolRadius: 4,
+                symbolWidth: 8,
+                verticalAlign: 'center',
+                x: 0,
+                y: 0,
+            }
+
+            var transMobilePie = $('#transMobilePie').MPChart(
+              {
+                  chartType: 'pie',
+                  highchartsOptions: {
+                      chart: {
+                          marginBottom: 0
+                      },
+                      legend: pieLegend,
+                      plotOptions: piePlotOptions,
+                      colors: ['#109618', '#ff9900', '#dc3912', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000']
+                  }
+              });
+            var rasIpClientPie = $('#rasIpClientPie').MPChart(
+                  {
+                      chartType: 'pie',
+                      highchartsOptions: {
+                          chart: {
+                              marginBottom: 0
+                          },
+                          legend: pieLegend,
+                          plotOptions: piePlotOptions,
+                          colors: ['#109618', '#ff9900', '#dc3912', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000']
+                      }
+                  });
+            var navigationPie = $('#navigationPie').MPChart(
+                  {
+                      chartType: 'pie',
+                      highchartsOptions: {
+                          chart: {
+                              marginBottom: 0
+                          },
+                          legend: pieLegend,
+                          plotOptions: piePlotOptions,
+                          colors: ['#109618', '#ff9900', '#dc3912', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000']
+                      }
+                  });
+
+            var runQueryCharts = function () {
+                var dateRange = dateSelect.MPDatepicker('value');
+
+                var params = {
+                    from: dateRange.from,
+                    to: dateRange.to,
+                    type: 'unique',
+                    where: 'properties["LocusTest"] == false'
+                };
+
+                MP.api.segment('DailyReport', 'TransMobile', params).done(function (results) {
+                     var data = results.values()
+                    var orderedKeys = Object.keys(data).sort().reverse();
+                    for (i in orderedKeys) {
+		                  data[orderedKeys[i]])
+	                   }
+                    transMobilePie.MPChart('setData', results);
+                });
+
+                MP.api.segment('DailyReport', 'RasIpClient', params).done(function (results) {
+                    rasIpClientPie.MPChart('setData', results);
+                });
+                
+                var mapNavParams = {
+                    from: dateRange.from,
+                    to: dateRange.to,
+                    type: 'unique',
+                    where: 'defined (properties["MapNavigation"]) and properties["LocusTest"] == false'
+                };
+                
+                MP.api.segment('DailyReport', 'MapNavigation', mapNavParams).done(function (results) {
+                    navigationPie.MPChart('setData', results);
+                });
+            };
+
+            var runQueryLists = function () {
+                MP.api.people({ where: 'properties["FirstSeen"] != ""' }).done(function (results) {
+
+                    $("#transMobileInfo").html("");
+
+                    _.each(results.values().results, function (resultobject) {
+
+                        var firstSeen = moment(resultobject.$properties['FirstSeen'], "YYYY-MM-DDTHH:mm:ss");
+
+                        if (firstSeen.isAfter(moment().subtract(24, 'hours'))) {
+                            $('<span><strong>' + resultobject.$properties['$name'] + ' (' +
+                            resultobject.$properties['ControlRoom'] + '): </strong> First seen ' +
+                            firstSeen.fromNow() + '</span><br>').css({
+                                'background': 'lightgreen',
+                                'border': '1px solid #7a8195',
+                                'border-radius': '5px',
+                                'color': 'black',
+                                'display': 'inline-block',
+                                'margin-bottom': '10px',
+                                'margin-left': '10px',
+                                'margin-right': '10px',
+                                'padding': '10px'
+                            }).appendTo('#transMobileInfo');
+                        }
+                    });
+                });
+            };
+
+            dateSelect.on('change', runQueryCharts);
+
+            runQueryCharts();
+            runQueryLists();
+            
+            setInterval(function () {
+                runQueryCharts;
+            }, 900000); // Every 15 minutes
+
+            setInterval(runQueryLists, 60000); // Every 1 minute
+        });
     </script>
-  </body>
+</body>
 </html>
