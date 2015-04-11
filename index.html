@@ -153,9 +153,8 @@
 
                     _.each(results.values().results, function (resultobject) {
 
-                        var firstSeen = moment(resultobject.$properties['FirstSeen'], "YYYY-MM-DDTHH:mm:ss");
 
-                        if (firstSeen.isAfter(moment().subtract(24, 'hours'))) {
+                      
                             $('<span><strong>' + resultobject.$properties['$name'] + ' (' +
                             resultobject.$properties['ControlRoom'] + '): </strong> First seen ' +
                             firstSeen.fromNow() + '</span><br>').css({
@@ -169,7 +168,7 @@
                                 'margin-right': '10px',
                                 'padding': '10px'
                             }).appendTo('#transMobileInfo');
-                        }
+                        
                     });
                 });
             };
