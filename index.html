@@ -143,7 +143,7 @@
             var runQueryLists = function () {
                 var currentDate = new Date().valueOf();
                 var yesterdayDate = currentDate - (24*60*60);
-                MP.api.people({ where: 'properties["FirstSeen"] >= yesterdayDate' }).done(function (results) {
+                MP.api.people({ where: 'properties["FirstSeen"] >= ' + yesterdayDate}).done(function (results) {
 
                     $("#transMobileInfo").html("");
 
