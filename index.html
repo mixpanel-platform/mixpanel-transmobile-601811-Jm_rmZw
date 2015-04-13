@@ -127,8 +127,6 @@
 		                  }
 	                    finalData[newKey] = totalSum
 	                   }
-	                   console.log("this is our data");
-	                   console.log(finalData);
                     transMobilePie.MPChart('setData', finalData);
                 });
 
@@ -191,6 +189,7 @@
     <script>
       MP.api.setCredentials(dc1d8d28673d73ad9dce8ff28f46aa5d, e53bc5eb23a25762be08792d6c8b19ea);
       Mp.api.topEvents.done(function results){
+        console.log("this is Hilary's data");
         console.log(results);
         
       }
