@@ -187,5 +187,14 @@
             setInterval(runQueryLists, 60000); // Every 1 minute
         });
     </script>
+    
+    <script>
+      MP.api.setCredentials(dc1d8d28673d73ad9dce8ff28f46aa5d, e53bc5eb23a25762be08792d6c8b19ea);
+      Mp.api.topEvents.done(function results){
+        console.log(results);
+        
+      }
+    </script>
+    
 </body>
 </html>
